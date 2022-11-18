@@ -1,0 +1,8 @@
+:root {
+  --ui-height: 400px;
+  --map-container-cover: 20px;
+  --default-circle: 150px;
+  --large-circle: 180px;
+  --default-circle-font-size: 40px;
+  --large-circle-font-size: 68px;
+}
