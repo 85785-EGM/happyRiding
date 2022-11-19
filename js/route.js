@@ -3,6 +3,7 @@ const map = new BMap.Map('map')
 const routes = []
 // 路径点
 const pathPoints = []
+let routeName = null
 
 function init () {
   var point = new BMap.Point(120.300835, 31.463311)
@@ -23,7 +24,7 @@ async function selectLocation () {
       window.alert('无法规划路线')
       return
     }
-    pathPoints.push(...result.path)
+    pathPoints.push(result.path)
     plan = result.plan
     text = `${plan.getDistance()}， ${plan.getDuration()}`
   }
@@ -92,9 +93,51 @@ function updateUi () {
 // 设置路线点
 function setWaypoint () {}
 
-function loadEdit () {}
+function loadEdit () {
+  console.log(plus.storage.getAllKeys())
+}
 
-function saveEdit () {}
+function saveEdit () {
+  /*
+
+  path.lat-path.lng,path.lat-path.lng^(route.lat-route.lng)(distance)(duration)
+  ?
+  path.lat-path.lng,path.lat-path.lng^(route.lat-route.lng)(distance)(duration)
+  ?
+  path.lat-path.lng,path.lat-path.lng^(route.lat-route.lng)(distance)(duration)
+
+  */
+
+  const defaultText = routeName ?? `方案 - ${new Date().toLocaleDateString()}`
+  function confirmSave ({ index, value }) {
+    if (index !== 0) return
+    const name = value ? value : defaultText
+    const changeDate = new Date().toLocaleString()
+    let distance = 0
+    const points = pathPoints
+      .map((points, index) => {
+        const pp = points.map(({ lat, lng }) => `${lat}-${lng}`).join(',')
+        const route = routes[index]
+
+        distance += parseInt(route.plan?.getDistance())
+
+        return `${pp}^(${route.location.lat}-${
+          route.location.lng
+        })(${route.plan?.getDistance()})(${route.plan?.getDuration()})`
+      })
+      .join('?')
+    const saveJson = JSON.stringify({ name, changeDate, distance, points })
+    plus.storage.setItem(name, saveJson)
+  }
+
+  mui.prompt(
+    '如果路线已存在，会覆盖路线',
+    defaultText,
+    '路线名',
+    ['是', '否'],
+    confirmSave
+  )
+}
 
 function exitEdit () {
   mui.confirm('是否退出编辑', '警告', ['是', '否'], function ({ index }) {
@@ -103,6 +146,15 @@ function exitEdit () {
     }
   })
 }
+
+$('#map').addEventListener(
+  'pointermove',
+  function () {
+    console.log('aasdfas')
+  },
+  true
+)
+
 export default function () {
   init()
   $('#select-location').onclick = selectLocation

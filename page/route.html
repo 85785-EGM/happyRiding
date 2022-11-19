@@ -63,7 +63,9 @@
 
   <script type="module">
     import init from '../js/route.js'
-    mui.init()
-    init()
+    document.addEventListener('plusready', function () {
+      mui.init()
+      init()
+    })
   </script>
 </html>

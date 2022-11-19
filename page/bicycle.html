@@ -7,15 +7,20 @@
       content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title></title>
+    <script src="../js/utils.js"></script>
     <script
       type="text/javascript"
       src="http://api.map.baidu.com/api?ak=2An7nGIA2qRzUCnH8nGtHi4EsUQZVjwH&type=lite&v=1.0"
     ></script>
+    <script type="text/javascript" src="../js/mui.min.js"></script>
+    <link rel="stylesheet" href="../css/mui.min.css" />
     <link rel="stylesheet" href="../css/root.css" />
     <link rel="stylesheet" href="../css/bicycle.css" />
   </head>
   <body>
-    <div id="map-container"></div>
+    <div id="map-container">
+      <div id="map"></div>
+    </div>
     <div id="riding-ui">
       <div class="ui-inline">
         <div class="speed">
@@ -41,12 +46,11 @@
     </div>
   </body>
 
-  <script type="text/javascript">
-    // document.addEventListener('plusready', function() {
-    var map = new BMap.Map('map-container')
-    var point = new BMap.Point(116.404, 39.915)
-    map.centerAndZoom(point, 18)
-    console.log(map)
-    // });
+  <script type="module">
+    import init from '../js/bicycle.js'
+    document.addEventListener('plusready', function () {
+      mui.init()
+      init()
+    })
   </script>
 </html>

@@ -6,3 +6,7 @@
   --default-circle-font-size: 40px;
   --large-circle-font-size: 68px;
 }
+
+body {
+  line-height: unset !important;
+}
